@@ -1,0 +1,17 @@
+zeebe:
+  resources: null
+  affinity: null
+zeebe-gateway:
+  resources: null
+  affinity: null
+elasticsearch:
+  resources: null
+  antiAffinity: soft
+operate:
+  enabled: false
+tasklist:
+  enabled: false
+identity:
+  enabled: false
+optimize:
+  enabled: false

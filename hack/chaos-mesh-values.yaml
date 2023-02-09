@@ -1,0 +1,5 @@
+dashboard:
+  securityMode: false
+chaosDaemon:
+  runtime: containerd
+  socketPath: /var/run/containerd/containerd.sock
