@@ -1,0 +1,21 @@
+name: Measure
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Specifies the name of the performance test'
+        required: true
+
+jobs:
+  measure:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
+          service_account: 'zeebe-gh-actions@zeebe-io.iam.gserviceaccount.com'
+      - uses: DeterminateSystems/nix-installer-action@main
+      - runs: nix develop --command gcloud container clusters get-credentials zeebe-cluster --zone europe-west1-b --project zeebe-io
+      - runs: nix develop --command ./run.sh
