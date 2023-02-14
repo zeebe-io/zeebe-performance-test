@@ -23,3 +23,5 @@ jobs:
           cluster_name: 'zeebe-cluster'
           location: 'europe-west1-b'
       - run: ./run.sh
+        env:
+          BENCHMARK_NAME: ${{ inputs.name }}
