@@ -18,5 +18,5 @@ jobs:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
           service_account: 'zeebe-gh-actions@zeebe-io.iam.gserviceaccount.com'
       - uses: DeterminateSystems/nix-installer-action@main
-      - runs: nix develop --command gcloud container clusters get-credentials zeebe-cluster --zone europe-west1-b --project zeebe-io
-      - runs: nix develop --command ./run.sh
+      - run: nix develop --command gcloud container clusters get-credentials zeebe-cluster --zone europe-west1-b --project zeebe-io
+      - run: nix develop --command ./run.sh
