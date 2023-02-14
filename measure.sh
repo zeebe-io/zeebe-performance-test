@@ -27,7 +27,7 @@ throughput=$(run_query "sum(rate(zeebe_element_instance_events_total{namespace=\
 if [ -n "$GITHUB_STEP_SUMMARY" ]
 then
     echo "**Process Instance Execution Time**: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50" >> "$GITHUB_STEP_SUMMARY"
-    echo "**Throughput**: $throughput PI/s"
+    echo "**Throughput**: $throughput PI/s" >> "$GITHUB_STEP_SUMMARY"
 else
     echo "Process Instance Execution Time: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
     echo "Throughput: $throughput PI/s"
