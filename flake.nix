@@ -15,18 +15,14 @@
       (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        gcloud = pkgs.google-cloud-sdk.withExtraComponents [pkgs.google-cloud-sdk.components.gke-gcloud-auth-plugin];
       in
       {
         devShells = {
           default = pkgs.mkShell
             {
               buildInputs = with pkgs; [
-                gcloud
-                docker
+                (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin google-cloud-sdk.components.kubectl])
                 kubernetes-helm
-                kubectl
-                kind
                 jq
               ];
             };
