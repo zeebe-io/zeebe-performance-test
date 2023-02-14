@@ -72,7 +72,7 @@ jobs:
           BENCHMARK_NAME: ${{ inputs.name }}
   measure-after:
     runs-on: ubuntu-latest
-    needs: [ measure-before ]
+    needs: [ deploy-chaos ]
     permissions:
       contents: 'read'
       id-token: 'write'
