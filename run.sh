@@ -2,6 +2,8 @@
 set -o errexit
 
 setup() {
+    kubectl krew install ctx
+    kubectl krew install ns    
     helm repo add zeebe-benchmark https://zeebe-io.github.io/benchmark-helm
     helm repo add chaos-mesh https://charts.chaos-mesh.org
     helm upgrade --install chaos-mesh \
