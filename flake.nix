@@ -27,7 +27,6 @@
                 kubernetes-helm
                 kubectl
                 kind
-                krew
                 jq
               ];
             };

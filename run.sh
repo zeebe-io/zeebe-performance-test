@@ -2,8 +2,6 @@
 set -o errexit
 
 setup() {
-    kubectl krew install ctx
-    kubectl krew install ns    
     helm repo add zeebe-benchmark https://zeebe-io.github.io/benchmark-helm
     helm repo add chaos-mesh https://charts.chaos-mesh.org
     helm upgrade --install chaos-mesh \
@@ -15,9 +13,8 @@ setup() {
     helm upgrade --install "$BENCHMARK_NAME" \
         zeebe-benchmark/zeebe-benchmark \
         --namespace="$BENCHMARK_NAME" --create-namespace
-
-    kubectl ns "$BENCHMARK_NAME"
-    kubectl create job --from=cronjob/leader-balancer manual-rebalancing 
+    kubectl -n "$BENCHMARK_NAME" rollout status statefulset "$BENCHMARK_NAME"-zeebe
+    kubectl -n "$BENCHMARK_NAME" create job --from=cronjob/leader-balancer manual-rebalancing 
 }
 
 measure() {
