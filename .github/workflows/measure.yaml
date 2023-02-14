@@ -9,6 +9,9 @@ on:
         description: 'Name of the chaos that will be introduced between measurements'
         default: network-latency-35
         required: false
+concurrency:
+  group: ${{ github.event.inputs.name }}
+  cancel-in-progress: false
 
 jobs:
   setup:
