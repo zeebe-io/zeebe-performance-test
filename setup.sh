@@ -10,13 +10,14 @@ helm install "$BENCHMARK_NAME" \
 if [ -n "$GITHUB_STEP_SUMMARY" ]
 then
     {
-        echo "Custom benchmark values"
+        echo "Deployed **$BENCHMARK_NAME** with custom values: "
         echo '```yaml'
         helm -n "$BENCHMARK_NAME" get values "$BENCHMARK_NAME" -o yaml
         echo '```'
 
         echo "<details>"
         echo "<summary>All benchmark values</summary>"
+        echo ""
         echo '```yaml'
         helm -n "$BENCHMARK_NAME" get values "$BENCHMARK_NAME" -o yaml -a
         echo '```'
