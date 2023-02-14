@@ -24,22 +24,7 @@ kubectl -n chaos-mesh port-forward svc/chaos-dashboard 2333
 
 ## Running experiments
 
-### Locally using nix
-
-Enter the nix develop environment:
-```shell
-nix develop
-```
-
-Run the script:
-```shell
-BENCHMARK_NAME=os-perf-test ./run.sh
-```
-
-This will take a moment but eventually the script will print out some measurements before and after running the chaos-mesh experiment.
-
-### Locally without nix
-
+## Locally 
 Make sure that you have all dependencies installed:
 - gcloud
 - kubectl
