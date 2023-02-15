@@ -33,7 +33,7 @@ Make sure that you have all dependencies installed:
 
 and run the script: 
 ```shell
-BENCHMARK_NAME=os-perf-test ./run.sh
+BENCHMARK_NAME=os-perf-test CHAOS=network-latency-5 ./run.sh
 ```
 
 ### Using GitHub Actions

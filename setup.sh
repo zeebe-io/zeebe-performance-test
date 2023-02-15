@@ -1,7 +1,7 @@
 #!/bin/sh
 set -o errexit
 
-kubectl delete ns "$BENCHMARK_NAME"
+kubectl delete ns "$BENCHMARK_NAME" || true
 helm repo add zeebe-benchmark https://zeebe-io.github.io/benchmark-helm
 helm install "$BENCHMARK_NAME" \
     zeebe-benchmark/zeebe-benchmark \
