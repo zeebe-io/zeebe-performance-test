@@ -9,7 +9,7 @@ percentile() {
     echo "histogram_quantile($1, $2)"
 }
 stddev() {
-    echo "stddev_over_time(($1)[5m:])"
+    echo "stddev_over_time(($1)[3m:])"
 }
 
 run_query() {
@@ -35,8 +35,8 @@ wait_for_query_value() {
 }
 
 # Query definitions
-latency="sum by (le) (rate(zeebe_process_instance_execution_time_bucket{namespace=\"$BENCHMARK_NAME\"}[5m]))"
-throughput="sum(rate(zeebe_element_instance_events_total{namespace=\"$BENCHMARK_NAME\",  action=\"completed\", type=\"PROCESS\"}[5m]))"
+latency="sum by (le) (rate(zeebe_process_instance_execution_time_bucket{namespace=\"$BENCHMARK_NAME\"}[3m]))"
+throughput="sum(rate(zeebe_element_instance_events_total{namespace=\"$BENCHMARK_NAME\",  action=\"completed\", type=\"PROCESS\"}[3m]))"
 
 # Wait until metrics are stable
 stable_latency="$(stddev "$(percentile 0.99 "$latency")")"
