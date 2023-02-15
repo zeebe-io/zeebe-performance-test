@@ -26,6 +26,7 @@ wait_for_query_value() {
 
     until [ "$result" -eq 1 ]
     do
+        sleep 30
         value=$(curl -s $url -d "query=$1" -H "Authorization: Bearer $token" | jq '.data.result[0].value[1] | tonumber')
         result=$(echo "$value $2 $3" | bc)
         printf "\r %g %s %g: %s" "$value" "$2" "$3" "$result"
