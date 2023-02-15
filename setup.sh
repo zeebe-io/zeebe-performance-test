@@ -5,7 +5,8 @@ kubectl delete ns "$BENCHMARK_NAME" || true
 helm repo add zeebe-benchmark https://zeebe-io.github.io/benchmark-helm
 helm install "$BENCHMARK_NAME" \
     zeebe-benchmark/zeebe-benchmark \
-    --namespace="$BENCHMARK_NAME" --create-namespace
+    --namespace="$BENCHMARK_NAME" --create-namespace \
+    $HELM_ARGS
 kubectl -n "$BENCHMARK_NAME" rollout status statefulset "$BENCHMARK_NAME"-zeebe
 kubectl -n "$BENCHMARK_NAME" create job --from=cronjob/leader-balancer manual-rebalancing-"$(date +%s)"
 

@@ -5,10 +5,17 @@ inputs:
   name:
     description: 'Specifies the name of the performance test'
     required: true
+    type: string
   chaos:
     description: 'Name of the chaos that will be introduced between measurements'
     default: network-latency-35
     required: false
+    type: string
+  helm-arguments:
+    description: 'Extra helm arguments to use when deploying benchmark'
+    default: ''
+    required: false
+    type: string
 
 runs:
   using: composite
@@ -25,6 +32,7 @@ runs:
       - run: ./setup.sh
         env:
           BENCHMARK_NAME: ${{ inputs.name }}
+          HELM_ARGS: ${{ inputs.helm-arguments }}
       - run: ./measure.sh
         env:
           BENCHMARK_NAME: ${{ inputs.name }}
