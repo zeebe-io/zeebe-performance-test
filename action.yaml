@@ -43,3 +43,4 @@ runs:
       - run: ./measure.sh
         env:
           BENCHMARK_NAME: ${{ inputs.name }}
+      - run: kubectl delete ns ${{ inputs.name }}
