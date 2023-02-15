@@ -5,14 +5,34 @@ on:
       name:
         description: 'Specifies the name of the performance test'
         required: true
+        type: string
       chaos:
         description: 'Name of the chaos that will be introduced between measurements'
         default: network-latency-35
         required: false
+        type: string
       helm-arguments:
         description: 'Extra helm arguments to use when deploying benchmark'
         default: ''
         required: false
+        type: string
+on:
+  workflow_call:
+    inputs:
+      name:
+        description: 'Specifies the name of the performance test'
+        required: true
+        type: string
+      chaos:
+        description: 'Name of the chaos that will be introduced between measurements'
+        default: network-latency-35
+        required: false
+        type: string
+      helm-arguments:
+        description: 'Extra helm arguments to use when deploying benchmark'
+        default: ''
+        required: false
+        type: string
 concurrency:
   group: ${{ github.event.inputs.name }}
   cancel-in-progress: false
@@ -87,3 +107,16 @@ jobs:
       - run: ./measure.sh
         env:
           BENCHMARK_NAME: ${{ inputs.name }}
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [ measure-after ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
+          service_account: 'zeebe-gh-actions@zeebe-io.iam.gserviceaccount.com'
+      - run: kubectl delete ns ${{ inputs.name }}
