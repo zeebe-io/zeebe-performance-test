@@ -41,6 +41,8 @@ jobs:
       id-token: 'write'
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: zeebe-io/zeebe-performance-test
       - uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
@@ -61,6 +63,8 @@ jobs:
       id-token: 'write'
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: zeebe-io/zeebe-performance-test
       - uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
@@ -76,6 +80,8 @@ jobs:
       id-token: 'write'
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: zeebe-io/zeebe-performance-test
       - uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
@@ -96,6 +102,8 @@ jobs:
       id-token: 'write'
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: zeebe-io/zeebe-performance-test
       - uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
@@ -111,6 +119,8 @@ jobs:
       id-token: 'write'
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: zeebe-io/zeebe-performance-test
       - uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
