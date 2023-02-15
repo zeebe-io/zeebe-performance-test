@@ -15,4 +15,6 @@ else
     echo "Deploying chaos $CHAOS"
 fi
 
-echo "$definition" | kubectl apply -f -
+resource=$(echo "$definition" | kubectl apply -o name -f -)
+echo "Waiting for $resource to be injected"
+kubectl -n "$BENCHMARK_NAME" wait --for=condition=AllInjected "$resource"

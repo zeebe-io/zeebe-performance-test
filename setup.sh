@@ -6,6 +6,8 @@ helm repo add zeebe-benchmark https://zeebe-io.github.io/benchmark-helm
 helm install "$BENCHMARK_NAME" \
     zeebe-benchmark/zeebe-benchmark \
     --namespace="$BENCHMARK_NAME" --create-namespace
+kubectl -n "$BENCHMARK_NAME" rollout status statefulset "$BENCHMARK_NAME"-zeebe
+kubectl -n "$BENCHMARK_NAME" create job --from=cronjob/leader-balancer manual-rebalancing-"$(date +%s)"
 
 if [ -n "$GITHUB_STEP_SUMMARY" ]
 then
