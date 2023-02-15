@@ -47,7 +47,6 @@ jobs:
         with:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
           service_account: 'zeebe-gh-actions@zeebe-io.iam.gserviceaccount.com'
-      - run: sleep 10m
       - run: ./measure.sh
         env:
           BENCHMARK_NAME: ${{ inputs.name }}
@@ -86,7 +85,6 @@ jobs:
         with:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
           service_account: 'zeebe-gh-actions@zeebe-io.iam.gserviceaccount.com'
-      - run: sleep 10m
       - run: ./measure.sh
         env:
           BENCHMARK_NAME: ${{ inputs.name }}
