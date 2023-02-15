@@ -39,6 +39,7 @@ latency="sum by (le) (rate(zeebe_process_instance_execution_time_bucket{namespac
 throughput="sum(rate(zeebe_element_instance_events_total{namespace=\"$BENCHMARK_NAME\",  action=\"completed\", type=\"PROCESS\"}[3m]))"
 
 # Wait until metrics are stable
+start_time=$(date +%s%3N)
 stable_latency="$(stddev "$(percentile 0.99 "$latency")")"
 stable_throughput="$(stddev "$throughput")"
 
@@ -57,11 +58,15 @@ process_latency_90=$(run_query "$(percentile 0.90 "$latency")")
 process_latency_50=$(run_query "$(percentile 0.50 "$latency")")
 
 throughput_avg=$(run_query "$throughput")
+end_time=$(date +%s%3N)
 
 if [ -n "$GITHUB_STEP_SUMMARY" ]
 then
-    echo "**Process Instance Execution Time**: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50" >> "$GITHUB_STEP_SUMMARY"
-    echo "**Throughput**: $throughput_avg PI/s" >> "$GITHUB_STEP_SUMMARY"
+    {
+        echo "**Process Instance Execution Time**: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
+        echo "**Throughput**: $throughput_avg PI/s" 
+        echo "[Grafana Dashboard](https://grafana.dev.zeebe.io/d/I4lo7_EZk/zeebe?orgId=1&var-namespace=$BENCHMARK_NAME&from=$start_time&to=$end_time)"
+    } >> "$GITHUB_STEP_SUMMARY"
 else
     echo "Process Instance Execution Time: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
     echo "Throughput: $throughput_avg PI/s"
