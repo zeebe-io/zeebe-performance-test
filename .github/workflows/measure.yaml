@@ -154,7 +154,7 @@ jobs:
       - run: kubectl delete ns ${{ inputs.name }}
   publish-to-slack:
     runs-on: ubuntu-latest
-    needs: [ setup measure-before deploy-chaos measure-after ]
+    needs: [ setup, measure-before, deploy-chaos, measure-after ]
     if: inputs.publish == 'slack'
     steps:
       - name: Send slack notification
