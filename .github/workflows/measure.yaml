@@ -16,6 +16,11 @@ on:
         default: ''
         required: false
         type: string
+      publish:
+        description: 'Where to publish results, can be "slack"'
+        default: ''
+        required: false
+        type: string
   workflow_call:
     inputs:
       name:
@@ -32,6 +37,11 @@ on:
         default: ''
         required: false
         type: string
+      publish:
+        description: 'Where to publish results, can be "slack"'
+        default: ''
+        required: false
+        type: string
 
 jobs:
   setup:
@@ -39,6 +49,8 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    outputs:
+      summary: ${{ steps.setup.outputs.summary }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -52,6 +64,7 @@ jobs:
           cluster_name: 'zeebe-cluster'
           location: 'europe-west1-b'
       - run: ./setup.sh
+        id: setup
         env:
           BENCHMARK_NAME: ${{ inputs.name }}
           HELM_ARGS: ${{ inputs.helm-arguments }}
@@ -61,6 +74,8 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    outputs:
+      summary: ${{ steps.measure.outputs.summary }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -70,6 +85,7 @@ jobs:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
           service_account: 'zeebe-gh-actions@zeebe-io.iam.gserviceaccount.com'
       - run: ./measure.sh
+        id: measure
         env:
           BENCHMARK_NAME: ${{ inputs.name }}
   deploy-chaos:
@@ -78,6 +94,8 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    outputs:
+      summary: ${{ steps.chaos.outputs.summary }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -91,6 +109,7 @@ jobs:
           cluster_name: 'zeebe-cluster'
           location: 'europe-west1-b'
       - run: ./chaos.sh
+        id: chaos
         env:
           CHAOS: ${{ inputs.chaos }}
           BENCHMARK_NAME: ${{ inputs.name }}
@@ -100,6 +119,8 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    outputs:
+      summary: ${{ steps.measure.outputs.summary }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -109,6 +130,7 @@ jobs:
           workload_identity_provider: 'projects/628707732411/locations/global/workloadIdentityPools/zeebe-gh-actions/providers/gha-provider'
           service_account: 'zeebe-gh-actions@zeebe-io.iam.gserviceaccount.com'
       - run: ./measure.sh
+        id: measure
         env:
           BENCHMARK_NAME: ${{ inputs.name }}
   cleanup:
@@ -130,3 +152,49 @@ jobs:
           cluster_name: 'zeebe-cluster'
           location: 'europe-west1-b'
       - run: kubectl delete ns ${{ inputs.name }}
+  publish-to-slack:
+    runs-on: ubuntu-latest
+    needs: [ setup measure-before deploy-chaos measure-after ]
+    if: inputs.publish == 'slack'
+    steps:
+      - name: Send slack notification
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "text": ":fyi: Performance measurements for benchmark ${{ inputs.name }} :zee-speed:",
+             	"blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ needs.setup.outputs.summary }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ needs.measure-before.outputs.summary }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ needs.chaos.outputs.summary }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ needs.measure-after.outputs.summary }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

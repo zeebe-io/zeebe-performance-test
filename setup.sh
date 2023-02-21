@@ -26,6 +26,7 @@ then
         echo '```'
         echo "</details>"
     }  >> "$GITHUB_STEP_SUMMARY"
+    echo "$GITHUB_STEP_SUMMARY" >> "$GITHUB_OUTPUT"
 else
     helm -n "$BENCHMARK_NAME" get values "$BENCHMARK_NAME" -o yaml
 fi
