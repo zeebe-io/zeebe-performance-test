@@ -27,7 +27,7 @@ then
         echo "</details>"
     }  >> "$GITHUB_STEP_SUMMARY"
     {
-        echo "summary=<<EOF"
+        echo "summary<<EOF"
         echo "Deployed **$BENCHMARK_NAME**"
         echo "EOF"
     } >> "$GITHUB_OUTPUT"

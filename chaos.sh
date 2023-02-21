@@ -12,7 +12,7 @@ then
         echo '```'
     }  >> "$GITHUB_STEP_SUMMARY"
     {
-        echo "summary=<<EOF"
+        echo "summary<<EOF"
         echo "Deployed chaos **$CHAOS**"
         echo "EOF"
     } >> "$GITHUB_OUTPUT"

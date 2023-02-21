@@ -69,7 +69,7 @@ then
         echo "[Grafana Dashboard]($grafana_url)"
     } >> "$GITHUB_STEP_SUMMARY"
     {
-        echo "summary=<<EOF"
+        echo "summary<<EOF"
         echo "**Process Instance Execution Time**: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
         echo "**Throughput**: $throughput_avg PI/s"
         echo "$grafana_url"
