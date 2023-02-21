@@ -67,7 +67,7 @@ then
         echo "**Throughput**: $throughput_avg PI/s" 
         echo "[Grafana Dashboard](https://grafana.dev.zeebe.io/d/I4lo7_EZk/zeebe?orgId=1&var-namespace=$BENCHMARK_NAME&from=$start_time&to=$end_time)"
     } >> "$GITHUB_STEP_SUMMARY"
-    echo "$GITHUB_STEP_SUMMARY" >> "$GITHUB_OUTPUT"
+    echo "summary=$(cat "$GITHUB_STEP_SUMMARY")" >> "$GITHUB_OUTPUT"
 else
     echo "Process Instance Execution Time: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
     echo "Throughput: $throughput_avg PI/s"
