@@ -26,11 +26,23 @@ then
         echo '```'
         echo "</details>"
     }  >> "$GITHUB_STEP_SUMMARY"
+fi
+
+if [ -n "$GITHUB_OUTPUT" ]
+then
     {
-        echo "summary<<EOF"
-        echo "Deployed **$BENCHMARK_NAME**"
+        echo "summary_markdown<<EOF"
+        echo "Deployed to **$BENCHMARK_NAME**"
+        echo '```yaml'
+        helm -n "$BENCHMARK_NAME" get values "$BENCHMARK_NAME" -o yaml
+        echo '```'
         echo "EOF"
     } >> "$GITHUB_OUTPUT"
-else
-    helm -n "$BENCHMARK_NAME" get values "$BENCHMARK_NAME" -o yaml
+    {
+        echo "summary_slack<<EOF"
+        echo "Deployed to *$BENCHMARK_NAME*"
+        echo "EOF"
+    } >> "$GITHUB_OUTPUT"
 fi
+
+helm -n "$BENCHMARK_NAME" get values "$BENCHMARK_NAME" -o yaml

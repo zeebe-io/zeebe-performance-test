@@ -61,6 +61,7 @@ throughput_avg=$(run_query "$throughput")
 end_time=$(date +%s%3N)
 grafana_url="https://grafana.dev.zeebe.io/d/I4lo7_EZk/zeebe?orgId=1&var-namespace=$BENCHMARK_NAME&from=$start_time&to=$end_time"
 
+
 if [ -n "$GITHUB_STEP_SUMMARY" ]
 then
     {
@@ -68,14 +69,24 @@ then
         echo "**Throughput**: $throughput_avg PI/s" 
         echo "[Grafana Dashboard]($grafana_url)"
     } >> "$GITHUB_STEP_SUMMARY"
+fi
+if [ -n "$GITHUB_OUTPUT" ]
+then
     {
-        echo "summary<<EOF"
+        echo "summary_markdown<<EOF"
         echo "**Process Instance Execution Time**: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
         echo "**Throughput**: $throughput_avg PI/s"
-        echo "$grafana_url"
+        echo "[Grafana]($grafana_url)"
         echo "EOF"
     } >> "$GITHUB_OUTPUT"
-else
-    echo "Process Instance Execution Time: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
-    echo "Throughput: $throughput_avg PI/s"
+    {
+        echo "summary_slack<<EOF"
+        echo "*Process Instance Execution Time*: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
+        echo "*Throughput*: $throughput_avg PI/s"
+        echo "<$grafana_url|Grafana>"
+        echo "EOF"
+    } >> "$GITHUB_OUTPUT"
 fi
+
+echo "Process Instance Execution Time: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
+echo "Throughput: $throughput_avg PI/s"

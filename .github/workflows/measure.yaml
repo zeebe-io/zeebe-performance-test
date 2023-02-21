@@ -50,7 +50,8 @@ jobs:
       contents: 'read'
       id-token: 'write'
     outputs:
-      summary: ${{ steps.setup.outputs.summary }}
+      summary_markdown: ${{ steps.setup.outputs.summary_markdown }}
+      summary_slack: ${{ steps.setup.outputs.summary_slack }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -75,7 +76,8 @@ jobs:
       contents: 'read'
       id-token: 'write'
     outputs:
-      summary: ${{ steps.measure.outputs.summary }}
+      summary_markdown: ${{ steps.measure.outputs.summary_markdown }}
+      summary_slack: ${{ steps.measure.outputs.summary_slack }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -95,7 +97,8 @@ jobs:
       contents: 'read'
       id-token: 'write'
     outputs:
-      summary: ${{ steps.chaos.outputs.summary }}
+      summary_markdown: ${{ steps.chaos.outputs.summary_markdown }}
+      summary_slack: ${{ steps.chaos.outputs.summary_slack }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -120,7 +123,8 @@ jobs:
       contents: 'read'
       id-token: 'write'
     outputs:
-      summary: ${{ steps.measure.outputs.summary }}
+      summary_markdown: ${{ steps.measure.outputs.summary_markdown }}
+      summary_slack: ${{ steps.measure.outputs.summary_slack }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -169,28 +173,28 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJSON(needs.setup.outputs.summary) }}
+                    "text": ${{ toJSON(needs.setup.outputs.summary_slack) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJSON(needs.measure-before.outputs.summary) }}
+                    "text": ${{ toJSON(needs.measure-before.outputs.summary_slack) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJSON(needs.deploy-chaos.outputs.summary) }}
+                    "text": ${{ toJSON(needs.deploy-chaos.outputs.summary_slack) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJSON(needs.measure-after.outputs.summary) }}
+                    "text": ${{ toJSON(needs.measure-after.outputs.summary_slack) }}
                   }
                 },
                 {
@@ -225,12 +229,12 @@ jobs:
           header: test
           message: |
              ### Setup
-               ${{ needs.setup.outputs.summary }}
+               ${{ needs.setup.outputs.summary_markdown }}
              ### Measurement before
-               ${{ needs.measure-before.outputs.summary }}
+               ${{ needs.measure-before.outputs.summary_markdown }}
              ### Chaos injection
-               ${{ needs.deploy-chaos.outputs.summary }}
+               ${{ needs.deploy-chaos.outputs.summary_markdown }}
              ### Measurement after
-               ${{ needs.measure-after.outputs.summary }}
+               ${{ needs.measure-after.outputs.summary_markdown }}
              ### Details
                See ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
