@@ -203,7 +203,7 @@ jobs:
                       "type": "button",
                       "text": {
                         "type": "plain_text",
-                        "text": "Detailed summary",
+                        "text": "Detailed summary"
                       },
                       "value": "detailed_summary",
                       "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
