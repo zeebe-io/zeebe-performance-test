@@ -169,28 +169,28 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ needs.setup.outputs.summary }}"
+                    "text": ${{ toJSON(needs.setup.outputs.summary) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ needs.measure-before.outputs.summary }}"
+                    "text": ${{ toJSON(needs.measure-before.outputs.summary) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ needs.chaos.outputs.summary }}"
+                    "text": ${{ toJSON(needs.chaos.outputs.summary) }}
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ needs.measure-after.outputs.summary }}"
+                    "text": ${{ toJSON(needs.measure-after.outputs.summary) }}
                   }
                 },
                 {
