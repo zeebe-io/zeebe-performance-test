@@ -40,7 +40,8 @@ then
     } >> "$GITHUB_OUTPUT"
     {
         echo "summary_slack<<EOF"
-        echo "Deployed to *$BENCHMARK_NAME*"
+        echo "Measured performance of *$BENCHMARK_NAME*"
+        helm -n "$BENCHMARK_NAME" get values "$BENCHMARK_NAME" -o yaml
         echo "EOF"
     } >> "$GITHUB_OUTPUT"
 fi
