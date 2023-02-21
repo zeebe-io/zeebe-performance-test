@@ -26,7 +26,7 @@ then
         echo '```'
         echo "</details>"
     }  >> "$GITHUB_STEP_SUMMARY"
-    echo "summary=$(cat "$GITHUB_STEP_SUMMARY")" >> "$GITHUB_OUTPUT"
+    echo "summary=Deployed **$BENCHMARK_NAME** with $HELM_ARGS" >> "$GITHUB_OUTPUT"
 else
     helm -n "$BENCHMARK_NAME" get values "$BENCHMARK_NAME" -o yaml
 fi
