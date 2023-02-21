@@ -19,3 +19,4 @@ resource=$(echo "$definition" | kubectl apply -o name -f -)
 echo "Waiting for $resource to be injected"
 kubectl -n "$BENCHMARK_NAME" wait --for=condition=AllInjected "$resource"
 echo "Waiting at least 1 minute for effects to become visible"
+sleep 1m
