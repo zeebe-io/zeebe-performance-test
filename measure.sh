@@ -18,6 +18,8 @@ run_query() {
         echo "Failed to query, retrying..."
         sleep 5
     done
+
+    result=$(echo "$result" | awk '{ printf("%.3f",$1) }')
     echo "$result"
 }
 
