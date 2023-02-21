@@ -222,15 +222,15 @@ jobs:
     steps:
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
-        header: test
-        message: |
-           ### Setup
-             ${{ needs.setup.outputs.summary }}
-           ### Measurement before
-             ${{ needs.measure-before.outputs.summary }}
-           ### Chaos injection
-             ${{ needs.chaos.outputs.summary }}
-           ### Measurement after
-             ${{ needs.measure-after.outputs.summary }}
-           ### Details
-             See ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          header: test
+          message: |
+             ### Setup
+               ${{ needs.setup.outputs.summary }}
+             ### Measurement before
+               ${{ needs.measure-before.outputs.summary }}
+             ### Chaos injection
+               ${{ needs.chaos.outputs.summary }}
+             ### Measurement after
+               ${{ needs.measure-after.outputs.summary }}
+             ### Details
+               See ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
