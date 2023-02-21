@@ -183,7 +183,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ toJSON(needs.chaos.outputs.summary) }}
+                    "text": ${{ toJSON(needs.deploy-chaos.outputs.summary) }}
                   }
                 },
                 {
@@ -229,7 +229,7 @@ jobs:
              ### Measurement before
                ${{ needs.measure-before.outputs.summary }}
              ### Chaos injection
-               ${{ needs.chaos.outputs.summary }}
+               ${{ needs.deploy-chaos.outputs.summary }}
              ### Measurement after
                ${{ needs.measure-after.outputs.summary }}
              ### Details
