@@ -11,7 +11,11 @@ then
         echo "$definition"
         echo '```'
     }  >> "$GITHUB_STEP_SUMMARY"
-    echo "summary=$(cat "$GITHUB_STEP_SUMMARY")" >> "$GITHUB_OUTPUT"
+    {
+        echo "summary=<<EOF"
+        echo "Deployed chaos **$CHAOS**"
+        echo "EOF"
+    } >> "$GITHUB_OUTPUT"
 else
     echo "Deploying chaos $CHAOS"
 fi

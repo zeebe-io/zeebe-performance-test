@@ -163,7 +163,7 @@ jobs:
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": ":fyi: Performance measurements for benchmark ${{ inputs.name }} :zee-speed:",
+              "text": ":fyi2: Performance measurements for benchmark ${{ inputs.name }} :zee-speed:",
              	"blocks": [
                 {
                   "type": "section",
@@ -192,6 +192,23 @@ jobs:
                     "type": "mrkdwn",
                     "text": "${{ needs.measure-after.outputs.summary }}"
                   }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Detailed summary",
+                      },
+                      "value": "detailed_summary",
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
                 }
               ]
             }
