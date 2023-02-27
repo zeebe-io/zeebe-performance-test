@@ -42,6 +42,8 @@ on:
         default: ''
         required: false
         type: string
+concurrency:
+  group: ${{ github.event.inputs.name }}
 
 jobs:
   setup:
