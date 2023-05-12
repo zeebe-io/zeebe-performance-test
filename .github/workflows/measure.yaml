@@ -140,6 +140,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     needs: [ measure-after ]
+    if: always()
     permissions:
       contents: 'read'
       id-token: 'write'
