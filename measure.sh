@@ -61,7 +61,7 @@ process_latency_50=$(run_query "$(percentile 0.50 "$latency")")
 
 throughput_avg=$(run_query "$throughput")
 end_time=$(date +%s%3N)
-grafana_url="https://grafana.dev.zeebe.io/d/I4lo7_EZk/zeebe?orgId=1&var-namespace=$BENCHMARK_NAME&from=$start_time&to=$end_time"
+grafana_url="https://grafana.dev.zeebe.io/d/zeebe-dashboard/zeebe?orgId=1&var-namespace=$BENCHMARK_NAME&from=$start_time&to=$end_time"
 
 
 if [ -n "$GITHUB_STEP_SUMMARY" ]
