@@ -29,7 +29,17 @@ wait_for_query_value() {
     until [ "$result" -eq 1 ]
     do
         sleep 30
-        value=$(curl -s $url -d "query=$1" -H "Authorization: Bearer $token" | jq '.data.result[0].value[1] | tonumber')
+
+        # race condition, the first request might happen before data is available
+        # see https://github.com/zeebe-io/zeebe-performance-test/issues/7
+        request = $(curl -s $url -d "query=$1" -H "Authorization: Bearer $token")
+        until [ ! -z "$request" ]
+        do
+          echo "Failed to query to endpoint $url, retrying..."
+          sleep 10
+          request =$(curl -s $url -d "query=$1" -H "Authorization: Bearer $token")
+        done
+        value=$($request| jq '.data.result[0].value[1] | tonumber')
         result=$(echo "$value $2 $3" | bc)
         printf "\r %g %s %g: %s" "$value" "$2" "$3" "$result"
     done
