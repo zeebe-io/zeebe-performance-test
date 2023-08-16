@@ -1,8 +1,11 @@
 #!/bin/sh
 set -o errexit
 
-url=https://monitoring.googleapis.com/v1/projects/zeebe-io/location/global/prometheus/api/v1/query
+url=http://localhost:8001/api/v1/namespaces/monitoring/services/monitoring-kube-prometheus-prometheus:http-web/proxy/api/v1/query
 token=$(gcloud auth print-access-token)
+
+# open the proxy in the background
+kubectl proxy &
 
 # Query helpers
 percentile() {
@@ -92,3 +95,6 @@ fi
 
 echo "Process Instance Execution Time: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
 echo "Throughput: $throughput_avg PI/s"
+
+# kills the proxy listening on port 8001
+kill $(lsof -i tcp:8001 -t)
