@@ -28,24 +28,8 @@ wait_for_query_value() {
 
     until [ "$result" -eq 1 ]
     do
-        sleep 10
-        limitOfRetries=0
-        value=$(curl -s $url -d "query=$1" -H "Authorization: Bearer $token" | jq ' try .data.result[0].value[1] | tonumber')
-        until [ ! -z "$value" ]
-        do
-
-          # tries to query the endpoint for a maximum of 5 minutes
-          if [ $limitOfRetries -eq 30 ]
-          then
-            echo "Error querying endpoint $url"
-            exit 1
-          fi
-
-          echo "Failed to query to endpoint $url, retrying..."
-          sleep 10
-          value=$(curl -s $url -d "query=$1" -H "Authorization: Bearer $token" | jq 'try .data.result[0].value[1] | tonumber')
-          ((limitOfRetries=limitOfRetries+1))
-        done
+        sleep 30
+        value=$(curl -s $url -d "query=$1" -H "Authorization: Bearer $token" | jq '.data.result[0].value[1] | tonumber')
         result=$(echo "$value $2 $3" | bc)
         printf "\r %g %s %g: %s" "$value" "$2" "$3" "$result"
     done
