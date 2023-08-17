@@ -1,8 +1,12 @@
 #!/bin/sh
 set -o errexit
 
-url=https://monitoring.googleapis.com/v1/projects/zeebe-io/location/global/prometheus/api/v1/query
-token=$(gcloud auth print-access-token)
+url=http://localhost:8001/api/v1/namespaces/monitoring/services/monitoring-kube-prometheus-prometheus:http-web/proxy/api/v1/query
+
+trap 'jobs -p | xargs -r kill -TERM' INT TERM EXIT HUP
+
+# open the proxy in the background
+kubectl proxy --port=8001 &
 
 # Query helpers
 percentile() {
@@ -13,7 +17,7 @@ stddev() {
 }
 
 run_query() {
-    until result=$(curl -s $url -d "query=$1" -H "Authorization: Bearer $token" | jq '.data.result[0].value[1] | tonumber')
+    until result=$(curl -s $url -d "query=$1" | jq '.data.result[0].value[1] | tonumber')
     do
         echo "Failed to query, retrying..."
         sleep 5
@@ -28,8 +32,24 @@ wait_for_query_value() {
 
     until [ "$result" -eq 1 ]
     do
-        sleep 30
-        value=$(curl -s $url -d "query=$1" -H "Authorization: Bearer $token" | jq '.data.result[0].value[1] | tonumber')
+        sleep 10
+        limitOfRetries=0
+        value=$(curl -s $url -d "query=$1" | jq ' try .data.result[0].value[1] | tonumber')
+        until [ ! -z "$value" ]
+        do
+
+          # tries to query the endpoint for a maximum of 5 minutes
+          if [ $limitOfRetries -eq 30 ]
+          then
+            echo "Error querying endpoint $url"
+            exit 1
+          fi
+
+          echo "Failed to query to endpoint $url, retrying..."
+          sleep 10
+          value=$(curl -s $url -d "query=$1" | jq 'try .data.result[0].value[1] | tonumber')
+          ((limitOfRetries=limitOfRetries+1))
+        done
         result=$(echo "$value $2 $3" | bc)
         printf "\r %g %s %g: %s" "$value" "$2" "$3" "$result"
     done
@@ -46,7 +66,7 @@ stable_latency="$(stddev "$(percentile 0.99 "$latency")")"
 stable_throughput="$(stddev "$throughput")"
 
 echo "Waiting for minimal throughput"
-wait_for_query_value "$throughput" \> 5 
+wait_for_query_value "$throughput" \> 5
 
 echo "Waiting for stable process instance execution times (stddev < 0.5)"
 wait_for_query_value "$stable_latency" \< 0.5
@@ -68,7 +88,7 @@ if [ -n "$GITHUB_STEP_SUMMARY" ]
 then
     {
         echo "**Process Instance Execution Time**: p99=$process_latency_99 p90=$process_latency_90 p50=$process_latency_50"
-        echo "**Throughput**: $throughput_avg PI/s" 
+        echo "**Throughput**: $throughput_avg PI/s"
         echo "[Grafana Dashboard]($grafana_url)"
     } >> "$GITHUB_STEP_SUMMARY"
 fi
