@@ -2,7 +2,6 @@
 set -o errexit
 
 url=http://localhost:8001/api/v1/namespaces/monitoring/services/monitoring-kube-prometheus-prometheus:http-web/proxy/api/v1/query
-token=$(gcloud auth print-access-token)
 
 trap 'jobs -p | xargs -r kill -TERM' INT TERM EXIT HUP
 
