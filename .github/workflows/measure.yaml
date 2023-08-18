@@ -79,10 +79,6 @@ jobs:
       summary_markdown: ${{ steps.measure.outputs.summary_markdown }}
       summary_slack: ${{ steps.measure.outputs.summary_slack }}
     steps:
-      - uses: 'google-github-actions/get-gke-credentials@v1'
-        with:
-          cluster_name: 'zeebe-cluster'
-          location: 'europe-west1-b'
       - uses: actions/checkout@v3
         with:
           repository: zeebe-io/zeebe-performance-test
